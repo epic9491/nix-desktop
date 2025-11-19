@@ -4,65 +4,34 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      inputs.home-manager.nixosModules.default
-    ];
-
+      ./xfce/xfce.nix
+      inputs.home-manager.nixosModules.default 
+   ];
    nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # Use systemd boot, best for UEFI
+   # Use systemd boot, best for UEFI
    boot.loader.systemd-boot.enable = true;
    boot.loader.efi.canTouchEfiVariables = true;
-
-  swapDevices = [
-    {
-      device = "/dev/disk/by-uuid/b5e6c2a1-f08f-4d67-9817-fba0e7298b65";
-    }
-  ];
-
+   swapDevices = [
+     {
+       device = "/dev/disk/by-uuid/b5e6c2a1-f08f-4d67-9817-fba0e7298b65";
+     }
+   ];
    # Use latest kernel
    boot.kernelPackages = pkgs.linuxPackages_latest;
-
    networking.hostName = "nix";
    networking.networkmanager.enable = true;
-
    nixpkgs.config.allowUnfree = true;
-
-  # Time Zone
+   # Time Zone
    time.timeZone = "America/Chicago";
-
-  # Internationalization properties
+   # Internationalization properties
    i18n.defaultLocale = "en_US.UTF-8";
    console = {
      font = "Lat2-Terminus16";
      keyMap = "us";
    };
-
-  ### Sound/Bluetooth block ###
-   services.pipewire = {
-     enable = true;
-     pulse.enable = true;
-     alsa.enable = true;
-   };
-
-   hardware.bluetooth = {
-     enable = true;
-     powerOnBoot = true;
-     settings = {
-       General = {
-         Experimental = true;
-         FastConnectable = false;
-       };
-       Policy = {
-         AutoEnable = true;
-       };
-     };
-   };
-   services.blueman.enable = true;
-
-  # Enable touchpad support
+   # Enable touchpad support
    services.libinput.enable = true;
-
-  # Define user account
+   # Define user account
    users.users.gumbo = {
      isNormalUser = true;
      extraGroups = [ 
@@ -72,23 +41,16 @@
     "video"
     ];
   };
- 
    home-manager = {
      extraSpecialArgs = { inherit inputs; };
      users = {
        "gumbo" = import ./home.nix;
      };
    };
-
-  home-manager.backupFileExtension = "backup";
-
-  # --- Firefox --- #
+   home-manager.backupFileExtension = "backup";
+   # --- Firefox --- #
    programs.firefox.enable = true;
-
-   # --- NetworkManager Applet for XFCE --- #  
-   programs.nm-applet.enable = true;
-
-  # List packages installed in system profile.
+   # List packages installed in system profile.
    environment.systemPackages = with pkgs; [
      vim
      wget
@@ -97,87 +59,48 @@
      curl
      eza
      ghostty
-     ### XFCE ###
-     xfce.xfce4-whiskermenu-plugin
-     xfce.xfce4-pulseaudio-plugin
-     xfce.xfce4-cpugraph-plugin
-     xfce.xfce4-battery-plugin
-     lightdm-gtk-greeter
-     ### XFCE ####
      fastfetch
      bitwarden-desktop
      spotify
      yubioath-flutter
      starship
      vscode
+     lazyssh
+     brave
  ];
+   ### Firewall ###
+   # networking.firewall.allowedTCPPorts = [ ... ];
+   # networking.firewall.allowedUDPPorts = [ ... ];
+   # networking.firewall.enable = false;
 
-  ### Firewall ###
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # networking.firewall.enable = false;
+   # --- services --- #
+   # services.qemuGuest.enable = true; # <-- only used for VMs, enables clipboard and ACPI shutdown signals 
+   # services.spice-vdagentd.enable = true; # <-- same here lol
 
-  # Copy the NixOS configuration file and link it to (/run/current-system/configuration.nix)
-  # system.copySystemConfiguration = true;
-
-  # --- services --- #
-
-  # services.qemuGuest.enable = true; # <-- only used for VMs, enables clipboard and ACPI shutdown signals 
-  # services.spice-vdagentd.enable = true; # <-- same here lol
-
-  services.tailscale.enable = true;
-  services.openssh.enable = true;
-  services.pcscd.enable = true; # <-- yubikey dependecy
+   services.tailscale.enable = true;
+   services.openssh.enable = true;
+   services.pcscd.enable = true; # <-- yubikey dependecy
  
-  # --- XFCE block --- #
-  services.xserver.enable = true;
-  services.xserver.displayManager.lightdm = { # <-- This block gives the greeter dark theme and use .face
-    enable = true;
-    greeters.gtk = {
-      enable = true;
-      theme = {
-        name = "Adwaita-dark";
-        package = pkgs.gnome-themes-extra;
-      };
-      extraConfig = ''
-        default-user-image=/usr/share/pixmaps/gumbo-face.png
-      '';
-    };
-  };
-  services.xserver.desktopManager.xfce.enable = true;
-  services.displayManager.defaultSession = "xfce";
-  services.picom = { # Causes issues if xfce compositor is enabled
-    enable = true;
-    fade = true;
-    inactiveOpacity = 0.7;
-    shadow = true;
-    fadeDelta = 4;
-    backend = "glx";
-    vSync = true;
- };
-  
-  # --- FLATPAKS --- #
-  services.flatpak.enable = true;
-  systemd.services.flatpak-repo = {
-    wantedBy = [ "multi-user.target" ];
-    path = [ pkgs.flatpak ];
-    script = ''
-      flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    '';
-  };
-  xdg.portal.enable = true; # <-- required for flatpaks
-  xdg.portal.extraPortals = [ # <-- required for flatpak apps to run
-    pkgs.xdg-desktop-portal-gtk
-    pkgs.xdg-desktop-portal-xapp
-   ];
-
-  ### shell aliases ###
-  environment.shellAliases = {
-    update = "sudo nixos-rebuild switch --upgrade --flake /home/gumbo/nixos#nix";
-    list_sys_gens = "sudo nix-env -p /nix/var/nix/profiles/system --list-generations";
-    rebuild_switch = "sudo nixos-rebuild switch --flake /home/gumbo/nixos#nix";
-  };
-
-  ########## DO NOT TOUCH ##########
-  system.stateVersion = "25.05"; # Did you read the comment?
-}
+   # --- FLATPAKS --- #
+   services.flatpak.enable = true;
+   systemd.services.flatpak-repo = {
+     wantedBy = [ "multi-user.target" ];
+     path = [ pkgs.flatpak ];
+     script = ''
+       flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+     '';
+   };
+   xdg.portal.enable = true; # <-- required for flatpaks
+   xdg.portal.extraPortals = [ # <-- required for flatpak apps to run
+     pkgs.xdg-desktop-portal-gtk
+     pkgs.xdg-desktop-portal-xapp
+    ];
+   ### shell aliases ###
+   environment.shellAliases = {
+     update = "sudo nixos-rebuild switch --upgrade --flake /home/gumbo/nixos#nix";
+     list_sys_gens = "sudo nix-env -p /nix/var/nix/profiles/system --list-generations";
+     rebuild_switch = "sudo nixos-rebuild switch --flake /home/gumbo/nixos#nix";
+   };
+   ########## DO NOT TOUCH ##########
+   system.stateVersion = "25.05"; # Did you read the comment?
+ }

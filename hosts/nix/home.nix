@@ -1,9 +1,13 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   home.username = "gumbo";
   home.homeDirectory = "/home/gumbo";
   home.stateVersion = "25.05"; # Please read the comment before changing.
+
+  imports = [
+    ./xfce/xfce-home.nix
+  ];
 
   programs.bash = {
     enable = true;
@@ -32,7 +36,7 @@
   ### ~/.config symlinks ###
 
   # ~/.config/starship.toml
-  xdg.configFile."starship.toml".source = ./config/starship.toml;
+  xdg.configFile."starship.toml".source = ./config/starship/starship.main.toml;
 
   # ~/.config/ghostty/config
   xdg.configFile."ghostty/config".source = ./config/ghostty.config;
