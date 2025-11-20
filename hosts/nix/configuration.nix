@@ -67,6 +67,7 @@
      vscode
      lazyssh
      brave
+     btop
  ];
    ### Firewall ###
    # networking.firewall.allowedTCPPorts = [ ... ];

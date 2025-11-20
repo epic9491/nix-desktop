@@ -1,21 +1,30 @@
 { config, pkgs, lib, ... }:
 
-{
-  gtk = {
-    enable = true;
-    theme = {
-      name = "Graphite-Dark";
-      package = pkgs.graphite-gtk-theme;
-    };
-    gtk3.extraConfig = {
-      Settings = ''
-        gtk-application-prefer-dark-theme=1
-      '';
-    };
-    gtk4.extraConfig = {
-      Settings = ''
-        gtk-application-prefer-dark-theme=1
-      '';
-    };
-  };
-}
+
+let
+  nixIconPath = "${config.xdg.dataHome}/icons/nix/nix-icon.svg";
+in {
+   gtk = {
+     enable = true;
+     theme = {
+       name = "Graphite-Dark";
+       package = pkgs.graphite-gtk-theme;
+     };
+     gtk3.extraConfig = {
+       Settings = ''
+         gtk-application-prefer-dark-theme=1
+       '';
+     };
+     gtk4.extraConfig = {
+       Settings = ''
+         gtk-application-prefer-dark-theme=1
+       '';
+     };
+   };
+   xdg.dataFile."icons/nix/nix-icon.svg".source = ./nix-icon.svg;
+   xdg.configFile."xfce4/panel/whiskermenu-12.rc".text = ''
+     button-icon=${nixIconPath}
+     button-single-row=false
+     show-button-title=false
+   '';
+ }
