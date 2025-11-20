@@ -13,6 +13,7 @@
       hello = "echo hey";
       ls = "eza";
       battery-health = "upower -i /org/freedesktop/UPower/devices/battery_BAT0";
+      nix-forge2git = "cp -r ~/nixos/* ~/git-repos/nixos-github/";
     };
     initExtra = ''
       export EZA_CONFIG_DIR="$HOME/.config/eza"
@@ -25,6 +26,14 @@
   programs.starship = {
     enable = true;
     enableBashIntegration = true;
+  };
+   programs.btop = {
+    enable = true;
+    settings = {
+      color_theme = "tokyo-night";
+      theme_background = true;
+      truecolor = true;
+    };
   };
   ### ~/.config symlinks ###
   xdg.configFile = {
