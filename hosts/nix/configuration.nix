@@ -8,7 +8,6 @@
 
 {
   imports = [
-    # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./xfce/xfce.nix
     inputs.home-manager.nixosModules.default
@@ -17,30 +16,31 @@
     "nix-command"
     "flakes"
   ];
-  # Use systemd boot, best for UEFI
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  # Use systemd boot
+  boot = {
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
+    kernelPackages = pkgs.linuxPackages_latest;
+  };
+  nixpkgs.config.allowUnfree = true;
   swapDevices = [
     {
       device = "/dev/disk/by-uuid/b5e6c2a1-f08f-4d67-9817-fba0e7298b65";
     }
   ];
-  # Use latest kernel
-  boot.kernelPackages = pkgs.linuxPackages_latest;
   networking.hostName = "nix";
   networking.networkmanager.enable = true;
-  nixpkgs.config.allowUnfree = true;
-  # Time Zone
+  # time zone
   time.timeZone = "America/Chicago";
-  # Internationalization properties
+  # internationalization properties
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
     font = "Lat2-Terminus16";
     keyMap = "us";
   };
-  # Enable touchpad support
-  services.libinput.enable = true;
-  # Define user account
+  # user account
   users.users.gumbo = {
     isNormalUser = true;
     extraGroups = [
@@ -58,9 +58,9 @@
     };
   };
   home-manager.backupFileExtension = "backup";
-  # --- Firefox --- #
+  # firefox
   programs.firefox.enable = true;
-  # List packages installed in system profile.
+  # list packages installed in system profile.
   environment.systemPackages = with pkgs; [
     vim
     wget
@@ -80,14 +80,10 @@
     nixfmt-rfc-style
   ];
 
-  ### Firewall ###
+  # firewall
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # networking.firewall.enable = false;
-
-  # --- services --- #
-  # services.qemuGuest.enable = true; # <-- only used for VMs, enables clipboard and ACPI shutdown signals
-  # services.spice-vdagentd.enable = true; # <-- same here lol
 
   services = {
     tailscale.enable = true;
@@ -96,15 +92,15 @@
     qemuGuest.enable = true;
     spice-vdagentd.enable = true;
     flatpak.enable = true;
+    libinput.enable = true;
   };
-
   # virtualization
   programs.virt-manager.enable = true;
   virtualisation = {
     libvirtd.enable = true;
     spiceUSBRedirection.enable = true;
   };
-  # --- FLATPAKS --- #
+  # flatpaks
   systemd.services.flatpak-repo = {
     wantedBy = [ "multi-user.target" ];
     path = [ pkgs.flatpak ];
@@ -114,16 +110,14 @@
   };
   xdg.portal.enable = true; # <-- required for flatpaks
   xdg.portal.extraPortals = [
-    # <-- required for flatpak apps to run
     pkgs.xdg-desktop-portal-gtk
-    pkgs.xdg-desktop-portal-xapp
   ];
-  ### shell aliases ###
+  # shell aliases
   environment.shellAliases = {
     update = "sudo nixos-rebuild switch --upgrade --flake /home/gumbo/nixos#nix";
     list_sys_gens = "sudo nix-env -p /nix/var/nix/profiles/system --list-generations";
     rebuild_switch = "sudo nixos-rebuild switch --flake /home/gumbo/nixos#nix";
   };
   ########## DO NOT TOUCH ##########
-  system.stateVersion = "25.05"; # Did you read the comment?
+  system.stateVersion = "25.05";
 }
