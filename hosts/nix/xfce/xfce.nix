@@ -29,6 +29,7 @@
      xfce.xfce4-battery-plugin
      zuki-themes
      lightdm-gtk-greeter
+     elementary-xfce-icon-theme
  ];
   services.xserver.enable = true;
   services.xserver.displayManager.lightdm = { # <-- This block gives the greeter dark theme and use .face

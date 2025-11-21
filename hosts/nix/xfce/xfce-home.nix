@@ -10,6 +10,10 @@ in {
        name = "Graphite-Dark";
        package = pkgs.graphite-gtk-theme;
      };
+     iconTheme = {
+     name = "elementary-xfce";
+     package = pkgs.elementary-xfce-icon-theme;
+     };
      gtk3.extraConfig = {
        Settings = ''
          gtk-application-prefer-dark-theme=1
