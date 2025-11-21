@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   home.username = "gumbo";
@@ -23,15 +28,15 @@
     '';
   };
   home.packages = with pkgs; [
-    # add per-user packages here
+    # insert user packages
   ];
   # starship
   programs.starship = {
     enable = true;
     enableBashIntegration = true;
   };
-   # btop
-   programs.btop = {
+  # btop
+  programs.btop = {
     enable = true;
     settings = {
       color_theme = "tokyo-night";
@@ -48,8 +53,8 @@
   # dconf for kvm/qemu
   dconf.settings = {
     "org/virt-manager/virt-manager/connections" = {
-      autoconnect = ["qemu:///system"];
-      uris = ["qemu:///system"];
+      autoconnect = [ "qemu:///system" ];
+      uris = [ "qemu:///system" ];
     };
   };
   # home file

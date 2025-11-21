@@ -1,13 +1,22 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
-  imports =
-  [ # Include the results of the hardware scan.
+  imports = [
+    # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ./xfce/xfce.nix
-    inputs.home-manager.nixosModules.default 
+    inputs.home-manager.nixosModules.default
   ];
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
   # Use systemd boot, best for UEFI
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -21,7 +30,7 @@
   networking.hostName = "nix";
   networking.networkmanager.enable = true;
   nixpkgs.config.allowUnfree = true;
-   # Time Zone
+  # Time Zone
   time.timeZone = "America/Chicago";
   # Internationalization properties
   i18n.defaultLocale = "en_US.UTF-8";
@@ -34,11 +43,12 @@
   # Define user account
   users.users.gumbo = {
     isNormalUser = true;
-    extraGroups = [ 
+    extraGroups = [
       "wheel"
       "networkmanager"
       "sound"
       "video"
+      "libvirtd"
     ];
   };
   home-manager = {
@@ -52,21 +62,22 @@
   programs.firefox.enable = true;
   # List packages installed in system profile.
   environment.systemPackages = with pkgs; [
-     vim
-     wget
-     git
-     htop
-     curl
-     eza
-     ghostty
-     fastfetch
-     bitwarden-desktop
-     spotify
-     yubioath-flutter
-     starship
-     vscode
-     lazyssh
-     brave
+    vim
+    wget
+    git
+    htop
+    curl
+    eza
+    ghostty
+    fastfetch
+    bitwarden-desktop
+    spotify
+    yubioath-flutter
+    starship
+    vscode
+    lazyssh
+    brave
+    nixfmt-rfc-style
   ];
 
   ### Firewall ###
@@ -75,24 +86,25 @@
   # networking.firewall.enable = false;
 
   # --- services --- #
-  # services.qemuGuest.enable = true; # <-- only used for VMs, enables clipboard and ACPI shutdown signals 
+  # services.qemuGuest.enable = true; # <-- only used for VMs, enables clipboard and ACPI shutdown signals
   # services.spice-vdagentd.enable = true; # <-- same here lol
 
-  services.tailscale.enable = true;
-  services.openssh.enable = true;
-  services.pcscd.enable = true; # <-- yubikey dependecy
+  services = {
+    tailscale.enable = true;
+    openssh.enable = true;
+    pcscd.enable = true; # <-- yubikey dependecy
+    qemuGuest.enable = true;
+    spice-vdagentd.enable = true;
+    flatpak.enable = true;
+  };
+
   # virtualization
   programs.virt-manager.enable = true;
-  users.groups.libvirtd.members = [ "gumbo" ];
   virtualisation = {
     libvirtd.enable = true;
     spiceUSBRedirection.enable = true;
   };
-  # users.users.gumbo.extraGroups = [ "libvirtd" ];
-  services.qemuGuest.enable = true;
-  services.spice-vdagentd.enable = true;
   # --- FLATPAKS --- #
-  services.flatpak.enable = true;
   systemd.services.flatpak-repo = {
     wantedBy = [ "multi-user.target" ];
     path = [ pkgs.flatpak ];
@@ -101,7 +113,8 @@
     '';
   };
   xdg.portal.enable = true; # <-- required for flatpaks
-  xdg.portal.extraPortals = [ # <-- required for flatpak apps to run
+  xdg.portal.extraPortals = [
+    # <-- required for flatpak apps to run
     pkgs.xdg-desktop-portal-gtk
     pkgs.xdg-desktop-portal-xapp
   ];
