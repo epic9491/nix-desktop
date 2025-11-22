@@ -26,7 +26,6 @@
     xfce.xfce4-pulseaudio-plugin
     xfce.xfce4-cpugraph-plugin
     xfce.xfce4-battery-plugin
-    zuki-themes
     lightdm-gtk-greeter
     elementary-xfce-icon-theme
   ];
@@ -41,7 +40,7 @@
       enable = true;
       desktopManager.xfce.enable = true;
       displayManager.lightdm = {
-        # This block gives the greeter dark theme and uses .face
+        # this block gives the greeter dark theme and uses .face
         enable = true;
         greeters.gtk = {
           enable = true;
@@ -57,7 +56,7 @@
     };
     displayManager.defaultSession = "xfce";
     picom = {
-      # Causes issues if xfce compositor is enabled
+      # causes issues if xfce compositor is enabled
       enable = true;
       fade = true;
       inactiveOpacity = 0.7;
