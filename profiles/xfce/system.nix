@@ -1,10 +1,4 @@
-{
-  config,
-  lib,
-  pkgs,
-  inputs,
-  ...
-}:
+{ config, lib, pkgs, inputs, ... }:
 
 {
   hardware.bluetooth = {
@@ -20,7 +14,9 @@
       };
     };
   };
+
   programs.nm-applet.enable = true;
+
   environment.systemPackages = with pkgs; [
     xfce.xfce4-whiskermenu-plugin
     xfce.xfce4-pulseaudio-plugin
@@ -29,18 +25,21 @@
     lightdm-gtk-greeter
     elementary-xfce-icon-theme
   ];
+
   services = {
     pipewire = {
       enable = true;
       pulse.enable = true;
       alsa.enable = true;
     };
+
     blueman.enable = true;
+
     xserver = {
       enable = true;
       desktopManager.xfce.enable = true;
+
       displayManager.lightdm = {
-        # this block gives the greeter dark theme and uses .face
         enable = true;
         greeters.gtk = {
           enable = true;
@@ -54,9 +53,10 @@
         };
       };
     };
+
     displayManager.defaultSession = "xfce";
+
     picom = {
-      # causes issues if xfce compositor is enabled
       enable = true;
       fade = true;
       inactiveOpacity = 0.7;

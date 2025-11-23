@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  lib,
-  ...
-}:
+{ config, pkgs, lib, ... }:
 
 let
   nixIconPath = "${config.xdg.dataHome}/icons/nix/nix-icon.svg";
@@ -19,18 +14,16 @@ in
       name = "elementary-xfce";
       package = pkgs.elementary-xfce-icon-theme;
     };
-    gtk3.extraConfig = {
-      Settings = ''
-        gtk-application-prefer-dark-theme=1
-      '';
-    };
-    gtk4.extraConfig = {
-      Settings = ''
-        gtk-application-prefer-dark-theme=1
-      '';
-    };
+    gtk3.extraConfig.Settings = ''
+      gtk-application-prefer-dark-theme=1
+    '';
+    gtk4.extraConfig.Settings = ''
+      gtk-application-prefer-dark-theme=1
+    '';
   };
-  xdg.dataFile."icons/nix/nix-icon.svg".source = ./nix-icon.svg;
+
+  xdg.dataFile."icons/nix/nix-icon.svg".source = ../config/icons/nix-icon.svg;
+
   xdg.configFile."xfce4/panel/whiskermenu-12.rc".text = ''
     button-icon=${nixIconPath}
     button-single-row=false
