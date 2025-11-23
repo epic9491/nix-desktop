@@ -41,11 +41,40 @@
     ];
   };
 
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings = {
+      General = {
+        Experimental = true;
+        FastConnectable = false;
+      };
+      Policy = {
+        AutoEnable = true;
+      };
+    };
+  };
+
   fonts = {
     enableDefaultPackages = true;
     packages = with pkgs; [
       nerd-fonts.jetbrains-mono
+      inter
     ];
+    fontconfig = {
+      enable = true;
+
+      defaultFonts = {
+        sansSerif = [
+          "Inter"
+          "Noto Sans"
+        ];
+        serif = [ "Noto Serif" ];
+        monospace = [ "JetBrainsMono Nerd Font" ];
+      };
+    };
+
+    fontDir.enable = true;
   };
 
   programs.firefox.enable = true;
@@ -72,7 +101,7 @@
     nixfmt-rfc-style
     (retroarch.withCores (cores: with cores; [ mgba ]))
     upower
-    
+    blueman
   ];
 
   services = {
@@ -83,6 +112,56 @@
     spice-vdagentd.enable = true;
     flatpak.enable = true;
     libinput.enable = true;
+  };
+
+  services.syncthing = {
+    enable = true;
+    user = "gumbo";
+    group = "users";
+    dataDir = "/home/gumbo/sync";
+    configDir = "/home/gumbo/.config/syncthing";
+    overrideDevices = false;
+    overrideFolders = false;
+    openDefaultPorts = true;
+    settings = {
+      devices = {
+        "manga" = {
+          id = "I3J5UCJ-NZIOJCX-FIV6PUT-QSTITFA-4TI6PB7-MVR67TI-SW56QXD-6ARBAAE";
+        };
+        "erebos" = {
+          id = "DBCLUXM-MWHS7OZ-AJIDHAY-GFGTMDW-5RBCU4P-M4RE3IF-YMDWWOB-DNCSQQT";
+        };
+      };
+      folders = {
+        "retro-bios" = {
+          id = "p4epq-mmgmv";
+          path = "/home/gumbo/sync/retro/BIOS";
+          devices = [
+            "manga"
+            "erebos"
+          ];
+          type = "receiveonly";
+        };
+        "retro-roms" = {
+          id = "74edp-unucu";
+          path = "/home/gumbo/sync/retro/ROMs";
+          devices = [
+            "manga"
+            "erebos"
+          ];
+          type = "receiveonly";
+        };
+        "retro-saves" = {
+          id = "ymtp3-m4ngw";
+          path = "/home/gumbo/sync/retro/Saves";
+          devices = [
+            "manga"
+            "erebos"
+          ];
+          type = "sendreceive";
+        };
+      };
+    };
   };
 
   # virtualization
