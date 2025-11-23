@@ -25,9 +25,10 @@
         "custom/sep",
         "disk",
         "custom/sep",
-        "clock",
+        "battery",
         "custom/sep",
-        "tray"
+        "clock",
+        "custom/sep"
     ],
 
     // Modules configuration

@@ -21,7 +21,7 @@
         inherit system;
         specialArgs = { inherit inputs; };
         modules = [
-          ./hosts/nix-xfce/configuration.nix  # ✅ fixed path
+          ./hosts/nix-xfce/configuration.nix
           home-manager.nixosModules.home-manager
           {
             home-manager = {

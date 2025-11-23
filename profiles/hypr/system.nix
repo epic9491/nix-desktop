@@ -41,5 +41,13 @@
     ghostty
     screen
     rofi
+    kdePackages.dolphin
+    tokyonight-gtk-theme
+    brightnessctl
+    pamixer
+    grim
+    slurp
+    wl-clipboard
+    swayimg
   ];
 }

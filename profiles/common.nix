@@ -41,6 +41,13 @@
     ];
   };
 
+  fonts = {
+    enableDefaultPackages = true;
+    packages = with pkgs; [
+      nerd-fonts.jetbrains-mono
+    ];
+  };
+
   programs.firefox.enable = true;
 
   environment.systemPackages = with pkgs; [
@@ -64,6 +71,8 @@
     protonmail-desktop
     nixfmt-rfc-style
     (retroarch.withCores (cores: with cores; [ mgba ]))
+    upower
+    
   ];
 
   services = {
@@ -95,6 +104,10 @@
     '';
   };
 
+  services.upower.enable = true;
+
+  programs.dconf.enable = true;
+
   xdg.portal.enable = true;
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
@@ -103,6 +116,8 @@
     update_hypr = "sudo nixos-rebuild switch --upgrade --flake /home/gumbo/nixos#nix-hypr";
     rebuild_xfce = "sudo nixos-rebuild switch --flake /home/gumbo/nixos#nix-xfce";
     rebuild_hypr = "sudo nixos-rebuild switch --flake /home/gumbo/nixos#nix-hypr";
+    rebuild_boot_xfce = "sudo nixos-rebuild boot --flake /home/gumbo/nixos#nix-xfce";
+    rebuild_boot_hypr = "sudo nixos-rebuild boot --flake /home/gumbo/nixos#nix-hypr";
     list_sys_gens = "sudo nix-env -p /nix/var/nix/profiles/system --list-generations";
   };
 
