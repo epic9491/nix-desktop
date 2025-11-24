@@ -8,8 +8,6 @@
 {
   programs.git.enable = true;
 
-  #programs.bash.shellAliases.hypr = "echo land";
-
   xdg.configFile."hypr" = {
     source = ../config/hypr;
     recursive = true;
@@ -54,4 +52,17 @@
       icon-theme = "Adwaita";
     };
   };
+
+  programs.obs-studio = {
+    enable = true;
+
+    plugins = with pkgs.obs-studio-plugins; [
+      wlrobs
+      obs-pipewire-audio-capture
+      obs-vaapi
+      obs-gstreamer
+      obs-vkcapture
+    ];
+  };
+
 }

@@ -191,8 +191,8 @@
   xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
   environment.shellAliases = {
-    update_xfce = "sudo nixos-rebuild switch --upgrade --flake /home/gumbo/nixos#nix-xfce";
-    update_hypr = "sudo nixos-rebuild switch --upgrade --flake /home/gumbo/nixos#nix-hypr";
+    update_xfce = "cd ~/nixos && nix flake update && sudo nixos-rebuild switch --flake /home/gumbo/nixos#nix-xfce";
+    update_hypr = "cd ~/nixos && nix flake update && sudo nixos-rebuild switch --flake /home/gumbo/nixos#nix-hypr";
     rebuild_xfce = "sudo nixos-rebuild switch --flake /home/gumbo/nixos#nix-xfce";
     rebuild_hypr = "sudo nixos-rebuild switch --flake /home/gumbo/nixos#nix-hypr";
     rebuild_boot_xfce = "sudo nixos-rebuild boot --flake /home/gumbo/nixos#nix-xfce";

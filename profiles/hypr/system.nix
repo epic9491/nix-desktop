@@ -41,7 +41,6 @@
     ghostty
     screen
     rofi
-    kdePackages.dolphin
     tokyonight-gtk-theme
     brightnessctl
     pamixer
@@ -49,5 +48,8 @@
     slurp
     wl-clipboard
     swayimg
+    vlc
+    nemo
+    gvfs
   ];
 }
