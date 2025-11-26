@@ -1,4 +1,10 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  modulesPath,
+  ...
+}:
 
 {
   imports = [
@@ -8,5 +14,5 @@
   # Hostname
   networking.hostName = "prometheus";
 
-  # Prometheus-specific tweaks below
+  # Prometheus Tweaks
 }

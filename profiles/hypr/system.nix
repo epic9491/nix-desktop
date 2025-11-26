@@ -33,6 +33,9 @@
     };
   };
 
+  programs.hyprlock.enable = true;
+  security.pam.services.hyprlock = { };
+
   environment.systemPackages = with pkgs; [
     foot
     waybar
