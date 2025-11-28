@@ -23,6 +23,11 @@
     recursive = true;
   };
 
+  xdg.dataFile."icons/future-cyan" = {
+    source = ../config/icons/future-cyan;
+    recursive = true;
+  };
+
   gtk = {
     enable = true;
 

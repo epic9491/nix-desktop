@@ -21,7 +21,16 @@
     kernelPackages = pkgs.linuxPackages_latest;
   };
 
+  hardware.enableAllFirmware = true;
+
   networking.networkmanager.enable = true;
+
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+  };
+
   time.timeZone = "America/Chicago";
 
   i18n.defaultLocale = "en_US.UTF-8";
